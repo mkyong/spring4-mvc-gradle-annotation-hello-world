@@ -18,7 +18,7 @@ $ gradle jettyRun
 Access ```http://localhost:8080/spring4```
 
 ###3. To import this project into Eclipse IDE
-1. ```gradle eclipse```
+1. ```$ gradle eclipse```
 2. Import into Eclipse via **existing projects into workspace** option.
 3. Done.
 
