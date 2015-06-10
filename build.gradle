@@ -1,7 +1,8 @@
 apply plugin: 'java'
 apply plugin: 'war'
 apply plugin: 'eclipse-wtp'
-apply plugin: 'jetty'
+//apply plugin: 'jetty' //too old, Jetty6, use gretty
+apply plugin: 'org.akhikhl.gretty'
 
 // JDK 7
 sourceCompatibility = 1.7
@@ -23,16 +24,23 @@ dependencies {
 	
 }
 
-// Embeded Jetty
-jettyRun{
-	contextPath = "spring4"
-	httpPort = 8080
+//Gretty
+buildscript {
+  repositories {
+    jcenter()
+  }
+
+  dependencies {
+    classpath 'org.akhikhl.gretty:gretty:+'
+  }
 }
 
-jettyRunWar{
-	contextPath = "spring4"
-	httpPort = 8080
+gretty {
+  port = 8080
+  contextPath = 'spring4'
+  servletContainer = 'jetty9'
 }
+
 
 //For Eclipse IDE only
 eclipse {
