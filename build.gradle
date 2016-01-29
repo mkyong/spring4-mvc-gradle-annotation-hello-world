@@ -3,24 +3,50 @@ apply plugin: 'war'
 apply plugin: 'eclipse-wtp'
 //apply plugin: 'jetty' //too old, Jetty6, use gretty
 apply plugin: 'org.akhikhl.gretty'
+apply plugin: 'idea'
+apply plugin: 'jacoco' //code coverage
 
-// JDK 7
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+def springVersion = "4.2.4.RELEASE"
+def jdkVersion = 1.8
+def junitVersion = "4.12"
+def logbackVersion = "1.1.3"
+def jclOverSlf4jVersion = "1.7.14"
+def jstlVersion = "1.2"
+def hamcrestVersion = "1.3"
+def servletApiVersion = "3.1"
+
+sourceCompatibility = jdkVersion
+targetCompatibility = jdkVersion
 
 repositories {
     mavenLocal()
     mavenCentral()
 }
 
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.10'
+}
+
+configurations {
+    all*.exclude group: "commons-logging", module: "commons-logging"
+}
+
 dependencies {
- 
-	compile 'ch.qos.logback:logback-classic:1.1.3'
-	compile 'org.springframework:spring-webmvc:4.1.6.RELEASE'
-	compile 'javax.servlet:jstl:1.2'
-	
+
+    compile 'org.slf4j:jcl-over-slf4j:' + jclOverSlf4jVersion
+	compile 'ch.qos.logback:logback-classic:' + logbackVersion
+	compile 'org.springframework:spring-webmvc:' + springVersion
+	compile 'javax.servlet:jstl:' + jstlVersion
+
+    compile 'org.springframework:spring-test:' + springVersion
+    //exclude the build in hamcrest
+    testCompile('junit:junit:' + junitVersion) {
+        exclude group: 'org.hamcrest'
+    }
+    testCompile 'org.hamcrest:hamcrest-library:' + hamcrestVersion
+
 	//include in compile only, exclude in the war
-	providedCompile 'javax.servlet:servlet-api:2.5'
+    providedCompile 'javax.servlet:javax.servlet-api:' + servletApiVersion
 	
 }
 
@@ -41,7 +67,6 @@ gretty {
   servletContainer = 'jetty9'
 }
 
-
 //For Eclipse IDE only
 eclipse {
 
@@ -56,3 +81,14 @@ eclipse {
   }
 }
 
+jacoco {
+    toolVersion = "0.7.5.201505241946"
+    reportsDir = file("$buildDir/reports/jacoco")
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+}
