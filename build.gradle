@@ -27,24 +27,22 @@ task wrapper(type: Wrapper) {
     gradleVersion = '2.10'
 }
 
-configurations {
-    all*.exclude group: "commons-logging", module: "commons-logging"
+configurations.all {
+    exclude group: "commons-logging", module: "commons-logging"
 }
 
 dependencies {
 
     compile 'org.slf4j:jcl-over-slf4j:' + jclOverSlf4jVersion
 	compile 'ch.qos.logback:logback-classic:' + logbackVersion
-	compile 'org.springframework:spring-webmvc:' + springVersion
+    compile 'org.springframework:spring-webmvc:' +springVersion
 	compile 'javax.servlet:jstl:' + jstlVersion
-
     compile 'org.springframework:spring-test:' + springVersion
     //exclude the build in hamcrest
     testCompile('junit:junit:' + junitVersion) {
         exclude group: 'org.hamcrest'
     }
     testCompile 'org.hamcrest:hamcrest-library:' + hamcrestVersion
-
 	//include in compile only, exclude in the war
     providedCompile 'javax.servlet:javax.servlet-api:' + servletApiVersion
 	
@@ -82,7 +80,7 @@ eclipse {
 }
 
 jacoco {
-    toolVersion = "0.7.5.201505241946"
+    toolVersion = "0.7.5+"
     reportsDir = file("$buildDir/reports/jacoco")
 }
 
